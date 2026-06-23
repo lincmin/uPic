@@ -29,6 +29,7 @@ jobs:
             -scheme 'uPic(Release)' \
             -configuration Release \
             -derivedDataPath ./build \
+            EXCLUDED_SOURCE_FILE_NAMES="uPicShareExtension/*" \
             CODE_SIGN_IDENTITY="" \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGNING_ALLOWED=NO \

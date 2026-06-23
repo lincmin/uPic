@@ -1,32 +1,29 @@
 name: Build uPic (Personal Use)
 
-# 触发条件：手动触发 或 推送到 master 分支时自动触发
 on:
-  workflow_dispatch:   # 允许手动点击"Run workflow"触发
+  workflow_dispatch:
   push:
     branches:
       - master
 
 jobs:
   build:
-    runs-on: macos-latest   # 使用 GitHub 提供的免费 macOS 虚拟机
+    runs-on: macos-latest
 
     steps:
       # 1. 拉取源码
       - name: Checkout source code
         uses: actions/checkout@v4
 
-      # 2. 安装 CocoaPods 依赖
-      - name: Install CocoaPods and dependencies
-        run: |
-          sudo gem install cocoapods
-          pod install --repo-update
+      # 2. 列出可用 Scheme（用于调试确认）
+      - name: List available schemes
+        run: xcodebuild -project uPic.xcodeproj -list
 
-      # 3. 编译（禁用代码签名，供个人使用）
+      # 3. 编译（不再需要 CocoaPods，直接用 .xcodeproj）
       - name: Build with Xcode
         run: |
           xcodebuild \
-            -workspace uPic.xcworkspace \
+            -project uPic.xcodeproj \
             -scheme uPic \
             -configuration Release \
             -derivedDataPath ./build \
@@ -38,13 +35,14 @@ jobs:
       # 4. 打包成 zip
       - name: Package .app into zip
         run: |
-          APP_PATH="./build/Build/Products/Release/uPic.app"
+          APP_PATH=$(find ./build/Build/Products/Release -name "*.app" | head -1)
+          echo "Found app at: $APP_PATH"
           zip -r uPic-latest.zip "$APP_PATH"
 
-      # 5. 上传为 Artifact（可在 Actions 页面下载）
+      # 5. 上传 Artifact
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
           name: uPic-macOS-latest
           path: uPic-latest.zip
-          retention-days: 30   # 保留 30 天
+          retention-days: 30

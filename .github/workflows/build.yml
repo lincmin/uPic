@@ -11,20 +11,17 @@ jobs:
     runs-on: macos-latest
 
     steps:
-      # 1. 拉取源码
       - name: Checkout source code
         uses: actions/checkout@v4
 
-      # 2. 列出可用 Scheme（用于调试确认）
       - name: List available schemes
         run: xcodebuild -project uPic.xcodeproj -list
 
-      # 3. 编译（不再需要 CocoaPods，直接用 .xcodeproj）
       - name: Build with Xcode
         run: |
           xcodebuild \
             -project uPic.xcodeproj \
-            -scheme uPic \
+            -scheme "uPic(Release)" \
             -configuration Release \
             -derivedDataPath ./build \
             CODE_SIGN_IDENTITY="" \
@@ -32,14 +29,12 @@ jobs:
             CODE_SIGNING_ALLOWED=NO \
             ONLY_ACTIVE_ARCH=NO
 
-      # 4. 打包成 zip
       - name: Package .app into zip
         run: |
           APP_PATH=$(find ./build/Build/Products/Release -name "*.app" | head -1)
           echo "Found app at: $APP_PATH"
           zip -r uPic-latest.zip "$APP_PATH"
 
-      # 5. 上传 Artifact
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:

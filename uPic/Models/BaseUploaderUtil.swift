@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import libminipng
+//import libminipng
 import AppKit
 
 class BaseUploaderUtil {
@@ -18,13 +18,14 @@ class BaseUploaderUtil {
     ///   - data: jpg Data
     ///   - factor: 压缩率 0~100
     public static func compressPng(_ data: Data, factor: Int = 100) -> Data {
-        if (factor <= 0 || factor >= 100) {
-           return data
-        }
+        //if (factor <= 0 || factor >= 100) {
+           //return data
+        //}
         
-        let repData = minipng.data2Data(data, factor)
+        //let repData = minipng.data2Data(data, factor)
 
-        return repData ?? data
+        //return repData ?? data
+        return data
     }
     
     /// 压缩Jpg图片。

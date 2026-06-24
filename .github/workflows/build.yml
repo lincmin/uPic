@@ -34,6 +34,7 @@ jobs:
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGNING_ALLOWED=NO \
             ONLY_ACTIVE_ARCH=NO
+            FRAMEWORK_SEARCH_PATHS='$(PROJECT_DIR)/libs'
 
       - name: Package .app into zip
         run: |
